@@ -3,6 +3,7 @@
 <head>
     <title>Boulder Web Dev Meetup Mad Lib Program-A-Thon</title>
 	<link href="Content/css/Base.css" rel="Stylesheet" type="text/css" media="screen" />
+	<link href="Content/css/style.css" rel="Stylesheet" type="text/css" media="screen" />
 </head>
 <body>
 
@@ -26,6 +27,7 @@
 <script src="Content/js/MadLibEngine.js"></script>
 
 <!-- SIMPLE OPTION:  UNCOMMENT THIS SECTION TO USE THE STANDARD MADLIB-->
+<!--
 <script src="http://dev.markitondemand.com/Meetup/MadLib/GetMadLibJS"></script>
 <script src="http://dev.markitondemand.com/Meetup/MadLib/GetMadLibWordsJS"></script>
 <script>
@@ -38,16 +40,21 @@
 		setTimeout(function () { madLibEngine.fillNextWord(); }, 1000);
 	}
 
+
+	madLibEngine.templateHTML = '<div class="madLib"><div class="title">The New Computer Game</div><span class="sentence">For my birthday, I got a new computer game.</span><span class="sentence">It\'s really <span data-ml="adjective"></span>!</span><span class="sentence">The main character wears <span data-ml="adjective"></span> glasses, called the Multiple Perspecticles, that allow him to see what other people think.</span><span class="sentence">I have been <span data-ml="verb_ing"></span> it a lot since I got it.</span><span class="sentence">I guess I\'ve been playing the game a lot because I\'ve started to be able to tell what people are thinking!</span><span class="sentence">The other day, I forgot to take out the <span data-ml="noun"></span> and it was really <span data-ml="adverb"></span> in the <span data-ml="noun_location"></span>.</span><span class="sentence">I could tell just by looking at my mom that she was mad!</span><span class="sentence">Another day, I forgot to make my lunch and I left my homework at home, so I called Dad at work.</span><span class="sentence">I could tell even without seeing him that he was <span data-ml="adjective"></span>.</span><span class="sentence">I think I may have on my own invisible Multiple Perspecticles!</span></div>';
+
 	madLibEngine.setupWordCollection();
 
 	madLibEngine.addAndFillTemplate();
-</script>
 
+
+</script>
+-->
 
 <!-- OR -->
 
 <!-- FUN/API OPTION: UNCOMMENT THIS SECTION TO USE APIS -->
-<!--<script src="Content/js/Util.js"></script>
+<script src="Content/js/Util.js"></script>
 <script>
 
 	// if you want you can create your own local override of the handle preword call.
@@ -63,11 +70,11 @@
 			// below are sample API calls that you can use. You will need to specify your own success and error function,
 			// but we have gone ahead and gotten the API calls plugged in for you ahead of time.
 
-			this.BingImageSearch(Element, CurrentWord, context.BingImageSearchCompleted, function () { madLibEngine.fillNextWord(); });
+			//this.BingImageSearch(Element, CurrentWord, context.BingImageSearchCompleted, function () { madLibEngine.fillNextWord(); });
 			// this.YouTubeVideoSearch(Element, CurrentWord, context.YouTubeVideoSearchCompleted, function () { madLibEngine.fillNextWord(); });
 			// this.iTunesSeachAPI(Element, CurrentWord, function(Element, CurrentWord, Response){console.log(arguments); madLibEngine.fillNextWord();}, function(){ madLibEngine.fillNextWord(); });
 			// this.IMDBSearchAPI(Element, CurrentWord, function(Element, CurrentWord, Response){console.log(arguments); madLibEngine.fillNextWord();}, function(){ madLibEngine.fillNextWord(); });
-			// this.TwitterSearch(Element, CurrentWord, context.TwitterSearchCompleted, function(){ madLibEngine.fillNextWord(); });
+			 this.TwitterSearch(Element, CurrentWord, context.TwitterSearchCompleted, function(){ madLibEngine.fillNextWord(); });
 			// this.NetflixSearchAPI(Element, CurrentWord, functionElement, CurrentWord, Response(){console.log(arguments); madLibEngine.fillNextWord();}, function(){ madLibEngine.fillNextWord(); });
 			// this.LastFMAPISearch(Element, CurrentWord, function (Element, CurrentWord, Response) { console.log(arguments); madLibEngine.fillNextWord(); }, function () { madLibEngine.fillNextWord(); });
 		}
@@ -87,7 +94,7 @@
 	// called immediately after prefill.
 	Util.HandleWordPostFill = function (Element)
 	{
-		setTimeout(function(){madLibEngine.fillNextWord()}, 1000);
+		setTimeout(function(){madLibEngine.fillNextWord()}, 500);
 	};
 
 	$(document).ready(function ()
@@ -95,7 +102,33 @@
 		Util.Initialize("BC1F1DBF0739F031833E8B65B3C8758F4CC9A02E", "005a62f70d2f51d694717cbaacf16ee6", "nx2pqcdk7kjyjt23x3mzd292");
 	});
 
-</script>-->
+
+Utilities.fn.TwitterSearch = function (Element, CurrentWord, Callback, ErrorCallback)
+{
+	var context = this;
+
+	$.ajax({
+		type: "GET",
+		dataType: "JSONP",
+		url: context.TwitterSearchAPIURL,
+		data: { "q": CurrentWord + " @horse_ebooks" },
+		success: function (Response)
+		{
+			console.info(Response)
+			Response = context.TwitterFilterResponse(Response);
+
+			Callback(Element, CurrentWord, Response);
+		},
+		error: function ()
+		{
+			ErrorCallback(Element, CurrentWord);
+		}
+	});
+};
+</script>
+
+
+<img class="background" src="http://splitsider.com/wp-content/uploads/2012/01/horse_ebooks.jpg" />
 
 </body>
 </html>
